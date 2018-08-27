@@ -120,8 +120,8 @@ func TestWtf(t *testing.T) {
 
 func TestEstimatedFillRatio(t *testing.T) {
 	f := New(1000)
-	fr1_target := 0.015873
-	fr2_target := 0.973110
+	fr1Target := 0.015873
+	fr2Target := 0.973110
 	ep := 0.000005
 
 	for i := uint(0); i < f.k; i++ {
@@ -130,8 +130,8 @@ func TestEstimatedFillRatio(t *testing.T) {
 
 	fr1 := f.EstimatedFillRatio()
 
-	if (fr1 < fr1_target-ep) || (fr1 > fr1_target+ep) {
-		t.Errorf("%f should be %f (+/- %f).", fr1, fr1_target, ep)
+	if (fr1 < fr1Target-ep) || (fr1 > fr1Target+ep) {
+		t.Errorf("%f should be %f (+/- %f).", fr1, fr1Target, ep)
 	}
 
 	for i := 100; i < 1000; i++ {
@@ -140,8 +140,8 @@ func TestEstimatedFillRatio(t *testing.T) {
 
 	fr2 := f.EstimatedFillRatio()
 
-	if (fr2 < fr2_target-ep) || (fr2 > fr2_target+ep) {
-		t.Errorf("%f should be %f (+/- %f).", fr2, fr2_target, ep)
+	if (fr2 < fr2Target-ep) || (fr2 > fr2Target+ep) {
+		t.Errorf("%f should be %f (+/- %f).", fr2, fr2Target, ep)
 	}
 }
 
