@@ -23,6 +23,7 @@ import (
 	"math"
 )
 
+// Interface provides a template for a Bloom filter implementation
 type Interface interface {
 	Add(item string)             // Adds item to the BloomFilter
 	Test(item string) bool       // Test if item is maybe in the BloomFilter
@@ -38,7 +39,7 @@ type BloomFilter struct {
 	b      uint     // Number of buckets
 }
 
-// Returns a new BloomFilter object
+// New returns a new BloomFilter object
 func New(size uint) *BloomFilter {
 	return &BloomFilter{
 		bitset: make([]uint32, size/32),
@@ -49,6 +50,7 @@ func New(size uint) *BloomFilter {
 	}
 }
 
+// Add item to the Bloom filter
 func (f *BloomFilter) Add(item string) {
 	hash1 := hashFNV1a([]byte(item))
 	hash2 := hashFNV1a([]byte(item))
@@ -59,9 +61,12 @@ func (f *BloomFilter) Add(item string) {
 		f.bitset[bucket] |= (1 << uint(index%32))
 	}
 
-	f.n += 1
+	f.n++
 }
 
+// Test returns true if the item is in the Bloom filter, false otherwise.
+// If true, the result might be a false positive. If false, the data
+// is definitely not in the set.
 func (f *BloomFilter) Test(item string) (exists bool) {
 	hash1 := hashFNV1a([]byte(item))
 	hash2 := hashFNV1a([]byte(item))
@@ -79,6 +84,7 @@ func (f *BloomFilter) Test(item string) (exists bool) {
 	return
 }
 
+// EstimatedFillRatio returns the estimated fill ratio of the Bloom filter
 func (f *BloomFilter) EstimatedFillRatio() float64 {
 	return 1 - math.Exp((-float64(f.n)*float64(f.k))/float64(f.m))
 }
