@@ -19,68 +19,68 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 package bloomfilter
 
 import (
-  "hash/fnv"
-  "math"
-  )
+	"hash/fnv"
+	"math"
+)
 
-type Interface interface { 
-  Add(item string)        // Adds item to the BloomFilter
-  Test(item string) bool  // Test if item is maybe in the BloomFilter
-  EstimatedFillRatio() float64  // Estimate fill ratio of the BloomFilter
+type Interface interface {
+	Add(item string)             // Adds item to the BloomFilter
+	Test(item string) bool       // Test if item is maybe in the BloomFilter
+	EstimatedFillRatio() float64 // Estimate fill ratio of the BloomFilter
 }
 
 // BloomFilter probabilistic data structure definition
 type BloomFilter struct {
-  bitset []uint32     // The Bloom filter bitset
-  m      uint         // Number of bits in the Bloom filter bitset
-  k      uint         // Number of effective hashing functions
-  n      uint         // Number of elements in the filter
-  b      uint         // Number of buckets
+	bitset []uint32 // The Bloom filter bitset
+	m      uint     // Number of bits in the Bloom filter bitset
+	k      uint     // Number of effective hashing functions
+	n      uint     // Number of elements in the filter
+	b      uint     // Number of buckets
 }
 
 // Returns a new BloomFilter object
-func New(size uint) *BloomFilter { 
-  return &BloomFilter{
-    bitset: make([]uint32, size / 32),
-    m: size,
-    k: 4,             // 4 effective hash functions
-    n: uint(0),
-    b: size / 32,
-  }
+func New(size uint) *BloomFilter {
+	return &BloomFilter{
+		bitset: make([]uint32, size/32),
+		m:      size,
+		k:      4, // 4 effective hash functions
+		n:      uint(0),
+		b:      size / 32,
+	}
 }
 
 func (f *BloomFilter) Add(item string) {
-  hash1 := hashFNV1a([]byte(item))
-  hash2 := hashFNV1a([]byte(item))
+	hash1 := hashFNV1a([]byte(item))
+	hash2 := hashFNV1a([]byte(item))
 
-  for i := uint(0); i < f.k; i++ {
-    index := uint((hash1 + hash2*uint32(i))) % f.m
-    bucket := (index / 32) % f.b
-    f.bitset[bucket] |= (1 << uint(index % 32))
-  }
+	for i := uint(0); i < f.k; i++ {
+		index := uint((hash1 + hash2*uint32(i))) % f.m
+		bucket := (index / 32) % f.b
+		f.bitset[bucket] |= (1 << uint(index%32))
+	}
 
-  f.n += 1
+	f.n += 1
 }
 
 func (f *BloomFilter) Test(item string) (exists bool) {
-  hash1 := hashFNV1a([]byte(item))
-  hash2 := hashFNV1a([]byte(item))
-  exists = false
+	hash1 := hashFNV1a([]byte(item))
+	hash2 := hashFNV1a([]byte(item))
+	exists = false
 
-  for i := uint(0); i < f.k; i++ {
-    index := uint((hash1 + hash2*uint32(i))) % f.m
-    bucket := (index / 32) % f.b
-    if f.bitset[bucket] & (1 << uint(index % 32)) != 0 {
-      exists = true
-      break
-    }
-  }
+	for i := uint(0); i < f.k; i++ {
+		index := uint((hash1 + hash2*uint32(i))) % f.m
+		bucket := (index / 32) % f.b
+		if f.bitset[bucket]&(1<<uint(index%32)) != 0 {
+			exists = true
+			break
+		}
+	}
 
-  return
+	return
 }
 
 func (f *BloomFilter) EstimatedFillRatio() float64 {
-  return 1 - math.Exp((-float64(f.n)*float64(f.k))/float64(f.m))
+	return 1 - math.Exp((-float64(f.n)*float64(f.k))/float64(f.m))
 }
 
 /*
@@ -99,10 +99,10 @@ func (f *BloomFilter) EstimatedFillRatio() float64 {
     for randomness in practice."
 */
 func hashFNV1a(input []byte) uint32 {
-  hash := fnv.New32a()
+	hash := fnv.New32a()
 
-  hash.Write(input)
-  val32 := hash.Sum32()
+	hash.Write(input)
+	val32 := hash.Sum32()
 
-  return val32
+	return val32
 }
