@@ -3,6 +3,7 @@ Bloom Filter
 
 [![Master Build Status](https://secure.travis-ci.org/Echelon9/bloomfilter-go.png?branch=master)](https://travis-ci.org/Echelon9/bloomfilter-go?branch=master)
 [![Coverage Status](https://coveralls.io/repos/github/Echelon9/bloomfilter-go/badge.svg?branch=master)](https://coveralls.io/github/Echelon9/bloomfilter-go?branch=master)
+[![Go Report Card](https://goreportcard.com/badge/github.com/Echelon9/bloomfilter-go)](https://goreportcard.com/report/github.com/Echelon9/bloomfilter-go)
 
 This Go implementation of a Bloom filter uses the non-cryptographic
 [Fowler–Noll–Vo hash function][1] for speed.
