@@ -4,8 +4,8 @@ language: go
 # updates. Any older versions be considered deprecated. Don't bother testing
 # with them.
 go:
-  - "1.9.x"
   - "1.10.x"
+  - "1.11.x"
   - tip
 
 # This is a weird way of telling Travis to use the fast container-based test
